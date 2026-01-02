@@ -16,10 +16,11 @@ export const Route = createFileRoute('/_app')({
 
 function RouteComponent() {
   const router = useRouter();
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Implement logout logic here
     console.log("Logout button clicked");
     localStorage.setItem("isAuthenticated", "false");
+    await router.invalidate();
     router.navigate({
       to: "/login"
     })
