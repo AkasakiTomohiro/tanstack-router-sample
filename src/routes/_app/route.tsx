@@ -11,7 +11,10 @@ export const Route = createFileRoute('/_app')({
         }
       });
     }
-  }
+  },
+  loader: () => ({
+    loaderData: 'This data was loaded in the /_app/ route loader',
+  })
 })
 
 function RouteComponent() {
