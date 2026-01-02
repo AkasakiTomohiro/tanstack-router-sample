@@ -3,10 +3,23 @@ import { routeTree } from './routeTree.gen';
 
 const router = createRouter({
   routeTree,
-})
+  context: {
+    get auth() {
+      const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+      return { isAuthenticated };
+    }
+  }
+});
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+};
 
 function App() {
   return (<RouterProvider router={router} />);
 }
+
 
 export default App

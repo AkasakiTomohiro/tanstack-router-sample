@@ -1,5 +1,6 @@
-import { createRootRoute, Outlet, useNavigate } from '@tanstack/react-router';
+import { createRootRouteWithContext, Outlet, useNavigate } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import type { RouterContext } from '../routerContext';
 
 const RootComponent = () => {
     return (
@@ -16,7 +17,7 @@ const NotFoundComponent = () => {
     return "";
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
     component: RootComponent,
     notFoundComponent: NotFoundComponent,
 });

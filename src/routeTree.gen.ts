@@ -10,11 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as publicLoginRouteRouteImport } from './routes/(public)/login/route'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicRouteRoute = publicRouteRouteImport.update({
+  id: '/(public)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -23,9 +28,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const publicLoginRouteRoute = publicLoginRouteRouteImport.update({
-  id: '/(public)/login',
+  id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => publicRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -39,6 +44,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(public)': typeof publicRouteRouteWithChildren
   '/_app': typeof AppRouteRoute
   '/(public)/login': typeof publicLoginRouteRoute
 }
@@ -47,13 +53,13 @@ export interface FileRouteTypes {
   fullPaths: '/' | '/login'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/login'
-  id: '__root__' | '/' | '/_app' | '/(public)/login'
+  id: '__root__' | '/' | '/(public)' | '/_app' | '/(public)/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  publicRouteRoute: typeof publicRouteRouteWithChildren
   AppRouteRoute: typeof AppRouteRoute
-  publicLoginRouteRoute: typeof publicLoginRouteRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -63,6 +69,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)': {
+      id: '/(public)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof publicRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -77,15 +90,27 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof publicLoginRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof publicRouteRoute
     }
   }
 }
 
+interface publicRouteRouteChildren {
+  publicLoginRouteRoute: typeof publicLoginRouteRoute
+}
+
+const publicRouteRouteChildren: publicRouteRouteChildren = {
+  publicLoginRouteRoute: publicLoginRouteRoute,
+}
+
+const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
+  publicRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  publicRouteRoute: publicRouteRouteWithChildren,
   AppRouteRoute: AppRouteRoute,
-  publicLoginRouteRoute: publicLoginRouteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
