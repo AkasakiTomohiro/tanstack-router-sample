@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_app')({
   component: RouteComponent,
@@ -27,8 +27,8 @@ function RouteComponent() {
   }
   return (
     <>
-      <div>Hello "/_app"!</div>
       <button onClick={handleLogout} >Logout</button>
+      <Outlet />
     </>
   )
 }
