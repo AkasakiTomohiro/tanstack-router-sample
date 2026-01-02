@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PublicRouteRouteImport } from './routes/_public/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
-import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
-import { Route as publicLoginRouteRouteImport } from './routes/(public)/login/route'
+import { Route as PublicLoginRouteRouteImport } from './routes/_public/login/route'
 
-const AppRouteRoute = AppRouteRouteImport.update({
-  id: '/_app',
+const PublicRouteRoute = PublicRouteRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const publicRouteRoute = publicRouteRouteImport.update({
-  id: '/(public)',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -33,27 +33,27 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const publicLoginRouteRoute = publicLoginRouteRouteImport.update({
+const PublicLoginRouteRoute = PublicLoginRouteRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => publicRouteRoute,
+  getParentRoute: () => PublicRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/login': typeof publicLoginRouteRoute
+  '/login': typeof PublicLoginRouteRoute
   '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof publicLoginRouteRoute
+  '/login': typeof PublicLoginRouteRoute
   '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/(public)': typeof publicRouteRouteWithChildren
   '/_app': typeof AppRouteRouteWithChildren
-  '/(public)/login': typeof publicLoginRouteRoute
+  '/_public': typeof PublicRouteRouteWithChildren
+  '/_public/login': typeof PublicLoginRouteRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
 }
@@ -64,32 +64,32 @@ export interface FileRouteTypes {
   to: '/login' | '/settings' | '/'
   id:
     | '__root__'
-    | '/(public)'
     | '/_app'
-    | '/(public)/login'
+    | '/_public'
+    | '/_public/login'
     | '/_app/settings'
     | '/_app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  publicRouteRoute: typeof publicRouteRouteWithChildren
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  PublicRouteRoute: typeof PublicRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AppRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(public)': {
-      id: '/(public)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof publicRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -106,27 +106,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/(public)/login': {
-      id: '/(public)/login'
+    '/_public/login': {
+      id: '/_public/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof publicLoginRouteRouteImport
-      parentRoute: typeof publicRouteRoute
+      preLoaderRoute: typeof PublicLoginRouteRouteImport
+      parentRoute: typeof PublicRouteRoute
     }
   }
 }
-
-interface publicRouteRouteChildren {
-  publicLoginRouteRoute: typeof publicLoginRouteRoute
-}
-
-const publicRouteRouteChildren: publicRouteRouteChildren = {
-  publicLoginRouteRoute: publicLoginRouteRoute,
-}
-
-const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
-  publicRouteRouteChildren,
-)
 
 interface AppRouteRouteChildren {
   AppSettingsRoute: typeof AppSettingsRoute
@@ -142,9 +130,21 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface PublicRouteRouteChildren {
+  PublicLoginRouteRoute: typeof PublicLoginRouteRoute
+}
+
+const PublicRouteRouteChildren: PublicRouteRouteChildren = {
+  PublicLoginRouteRoute: PublicLoginRouteRoute,
+}
+
+const PublicRouteRouteWithChildren = PublicRouteRoute._addFileChildren(
+  PublicRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  publicRouteRoute: publicRouteRouteWithChildren,
   AppRouteRoute: AppRouteRouteWithChildren,
+  PublicRouteRoute: PublicRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

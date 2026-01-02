@@ -5,7 +5,7 @@ const searchSchema = z.object({
   redirect: z.string().optional(),
 });
 
-export const Route = createFileRoute('/(public)/login')({
+export const Route = createFileRoute('/_public/login')({
   component: RouteComponent,
   validateSearch: searchSchema
 })
