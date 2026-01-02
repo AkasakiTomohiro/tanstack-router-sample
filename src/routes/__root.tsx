@@ -1,12 +1,22 @@
-import { createRootRoute, Outlet } from '@tanstack/react-router';
+import { createRootRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
-export const Route = createRootRoute({
-    component: () => (
-        <>
+const RootComponent = () => {
+    return (
+          <>
             <Outlet />
             <TanStackRouterDevtools initialIsOpen={false} />
-        </>
-    ),
-    notFoundComponent: () => <div>404 Not Found</div>,
+        </> 
+    )
+}
+
+const NotFoundComponent = () => {
+    const navigate = useNavigate();
+    navigate({ to: "/" });
+    return "";
+}
+
+export const Route = createRootRoute({
+    component: RootComponent,
+    notFoundComponent: NotFoundComponent,
 });
