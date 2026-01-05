@@ -4,6 +4,7 @@ import { routeTree } from './routeTree.gen';
 const router = createRouter({
   routeTree,
   context: {
+    // getter にすることで再読みされたときに再評価できる
     get auth() {
       const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
       return { isAuthenticated };

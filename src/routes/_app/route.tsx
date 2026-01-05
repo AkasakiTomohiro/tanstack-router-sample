@@ -3,6 +3,8 @@ import { createFileRoute, Outlet, redirect, useRouter } from '@tanstack/react-ro
 export const Route = createFileRoute('/_app')({
   component: RouteComponent,
   beforeLoad: ({ context, location }) => {
+
+    // 未認証の場合はログイン画面に遷移を強制する
     if(!context.auth.isAuthenticated) {
       throw redirect({
         to: "/login",
