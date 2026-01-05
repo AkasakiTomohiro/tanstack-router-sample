@@ -25,6 +25,9 @@ function RouteComponent() {
     // Implement logout logic here
     console.log("Logout button clicked");
     localStorage.setItem("isAuthenticated", "false");
+
+    // src/App.tsx の context.auth を再評価するために invalidate を呼び出す
+    // invalidate を呼び出さないと context.auth は更新されない
     await router.invalidate();
     router.navigate({
       to: "/login"

@@ -18,6 +18,9 @@ function RouteComponent() {
     // Implement login logic here
     console.log("Login button clicked");
     localStorage.setItem("isAuthenticated", "true");
+
+    // src/App.tsx の context.auth を再評価するために invalidate を呼び出す
+    // invalidate を呼び出さないと context.auth は更新されない
     await router.invalidate();
     router.navigate({
       to: redirect || '/',
